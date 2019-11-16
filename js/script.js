@@ -9,7 +9,7 @@ $(function($) {
 		const position = $(this).scrollTop();
 
 		sections.each(function(){
-			const top = $(this).offset().top;
+			const top = $(this).offset().top - navHeight;
 			const bottom = top + $(this).height();
 			
 			const id = $(this).attr('id');
