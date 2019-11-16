@@ -13,23 +13,48 @@
 				<section>
 					<a class="nav-title" href="index.html">Lenmty</a>
 					<ul class="nav-menu">
-						<li><a class="page-scroll" href="#about">О себе</a></li> 
-						<!-- опыт, образование -->
+						<li><a class="page-scroll" href="#about">О себе</a></li>
 						<li><a class="page-scroll" href="#skills">Навыки</a></li>
 						<li><a class="page-scroll" href="#contact">Контакты</a></li>
 					</ul>
 				</section>
 			</nav>
-			<div class="header section"></div>
+			<div class="nav section"></div>
 			<div class="content">
-				<section>
-					<div id="about" class="section about">
+				<div id="about" class="section about">
+					<header class="header">
 						<h1>О себе</h1>
-						В 2019 году стала выпускницей Инстита Информационных Технологий Челябинского государственного университета
-					</div>
+						<p>Вольный художник</p>
+						Бакалавр Института Информационных Технологий ЧелГУ 2019 г.
+					</header>
+					<section>
+						<div class="cards">
+							<div class="courses">
+								<h2>Пройденные курсы</h2>
+								<ul>
+									<li>2019 Алгоритмы: теория и практика. Методы (CS Center, Stepik)</li>
+									<li>2019 Web-технологии (Mail.ru Group, Stepik);</li>
+									<li>2019 Diving in Python (МФТИ, Mail.ru Group, ФРОО, Coursera)</li>
+									<li>2018 Project management (Napoleon IT School, Xpage, MIDIS);</li>
+									<li>2018 Основы HTML, CSS, JavaScript (htmlacademy.ru);</li>
+									<li>2017 Основы программирования на примере C# (ulearn.me)</li>
+								</ul>
+							</div>
+							<div class="hobbies">
+								<h2>Хобби</h2>
+								<ul>
+									<li>Играю на гитаре</li>
+									<li>Читаю книги и слушаю подкасты</li>
+									<li>Увлекаюсь рисованием</li>
+									<li>Вырастила авокадо из косточки</li>					
+								</ul>
+							</div>				
+						</div>
+					</section>
+				</div>
+				<section>
 					<div id="skills" class="section skills">
 						<h1>Навыки</h1>
-						<!-- кружочки как в презентации у Никиты -->
 						<div class="rounded">
 							<div class="html">HTML</div>
 							<div class="css">CSS</div>
@@ -38,20 +63,42 @@
 							<div class="sql">SQL</div>
 							<div class="git">Git</div>
 						</div>
-						Курсы
 					</div>
 				</section>
+				<div class="carousel section">
+					<h1>Жизнеутверждающие цитатки</h1>
+					<div class="rules">
+						<div class="active">
+							<p>You have to demonstrate that you can do what you want to do.</p>
+							<i>Veritasium</i>
+						</div>
+						<div>
+							<p>Секрет успеха в правильном алгоритме.</p>
+							<i>Курс по алгоритмам</i>
+						</div>
+						<div>
+							<p>Вы в своей жизни должны жить.</p>
+							<i>Декан</i>
+						</div>
+					</div>
+					<a href="/" class="prev">
+						<i class="fa fa-chevron-left" aria-hidden="true"></i>
+					</a>
+					<a href="/" class="next">
+						<i class="fa fa-chevron-right" aria-hidden="true"></i>
+					</a>
+				</div>
 			</div>
 			<footer class="footer">
 				<section>
 					<ul id="contact" class="section contact">
 						<li>
-							<a href="" target="_blank">
+							<a href="https://t.me/CatDoge" target="_blank">
 								<i class="fab fa-telegram"></i>
 							</a>
 						</li>  
 						<li>
-							<a href="" target="_blank">
+							<a href="https://github.com/lenmty" target="_blank">
 								<i class="fab fa-github"></i>
 							</a>
 						</li>
@@ -61,10 +108,7 @@
 			</footer>
 		</div>
 		
-		<!-- Smooth Scroll -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
 		<script src="js/script.js"></script>
-		
 	</body>
 </html>

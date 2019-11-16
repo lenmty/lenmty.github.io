@@ -1,9 +1,8 @@
-//jQuery for page scrolling feature - requires jQuery Easing plugin 'easeInOutExpo'
-
+// scroll nav with active tab
 $(function($) {
 	const sections = $('.section'),
-		  nav = $('.navigation'),
-		  navHeight = nav.outerHeight();
+		nav = $('.navigation'),
+		navHeight = nav.outerHeight();
 
 	$(window).on('scroll', function(){
 		const position = $(this).scrollTop();
@@ -35,11 +34,28 @@ $(function() {
 });
 
 
+// carousel
+const rules = $('.rules div');
+var i = 0;
 
+$('a.prev').bind('click', function(event){
+	rules[i].className = '';
+    i--;
+     
+    if(i < 0){
+        i = rules.length - 1;
+    }
+ 
+	rules[i].className = 'active';
+});
 
-
-// <!-- Smooth Scroll -->	для html
-// <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.js"></script>
-
-// <script src="js/script.js"></script>
-// <script src="js/jquery.easing.min.js"></script>
+$('a.next').bind('click', function(event){
+	rules[i].className = '';
+    i++;
+     
+    if(i >= rules.length){
+    	i = 0;
+ 	}
+ 
+	rules[i].className = 'active';
+});
