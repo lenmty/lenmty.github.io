@@ -18,6 +18,7 @@ a {
 	color: #464196;
 	transition: all .3s linear;
 	font-family: 'Neucha', cursive;
+	cursor: pointer;
 }
 
 a.active {
