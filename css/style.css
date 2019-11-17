@@ -268,4 +268,8 @@ a,
 .carousel {
 	padding: 60px 20px;
 }
+
+.carousel h1 {
+	font-size: 1.7em;
+}
 }
