@@ -9,7 +9,7 @@ h1 {
 	text-align: center;
 	margin-bottom: 30px;
 	font-size: 2.1em;
-/* 	font-family: 'Neucha', cursive; */
+	font-family: 'Neucha', cursive;
 }
 
 a {
@@ -17,7 +17,7 @@ a {
 	outline: none;
 	color: #464196;
 	transition: all .3s linear;
-/* 	font-family: 'Neucha', cursive; */
+	font-family: 'Neucha', cursive;
 	cursor: pointer;
 }
 
@@ -89,7 +89,7 @@ ul {
 
 .cards h2 {
 	margin-bottom: 30px;
-/* 	font-family: 'Neucha', cursive; */
+	font-family: 'Neucha', cursive;
 }
 
 .courses,
@@ -137,7 +137,7 @@ ul {
 	border-radius: 50%;
 	text-align: center;
 	padding: 20px;
-/* 	font-family: 'Neucha', cursive; */
+	font-family: 'Neucha', cursive;
 	font-size: 1.2em;
 }
 
@@ -225,6 +225,13 @@ div.git { width: 5.5em; height: 5.5em; line-height: 5.5em; }
 }
 
 @media (max-width: 490px) {
+h1, 
+a,  
+.cards h2,
+.rounded > div {
+	font-family: Roboto, Arial, sans-serif;
+}
+
 .nav-title {
 	display: none;
 }
