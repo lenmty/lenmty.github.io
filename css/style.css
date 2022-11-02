@@ -148,7 +148,7 @@ ul {
 div.html { width: 7em; height: 7em; line-height: 7em; }
 div.css { width: 3em; height: 3em; line-height: 3em; }
 div.js { width: 1.4em; height: 1.4em; line-height: 1.4em; transition: 1s; }
-div.js:hover { transform: scale(2); }
+div.js:hover { width: 4.5em; height: 4.5em; line-height: 4.5em; }
 div.python { width: 5em; height: 5em; line-height: 5em; }
 div.sql { width: 4em; height: 4em; line-height: 4em; }
 div.git { width: 5.5em; height: 5.5em; line-height: 5.5em; }
