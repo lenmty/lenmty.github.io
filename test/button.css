@@ -1,4 +1,4 @@
-.getplatinum-widget-button {
+div[data-getplatinum-widget] .getplatinum-widget-button {
     background-color: #ff8fb3;
     color: #ffffff;
     border: none;
