@@ -1,0 +1,22 @@
+.getplatinum-widget-button {
+    background-color: #ff8fb3;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-size: 18px;
+    font-family: Roboto, Arial, sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+
+    background-image: url('');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 28px 28px;
+
+    padding-right: 52px;
+}
+
+.getplatinum-widget-button:hover {
+    background-color: #ff709d;
+}
