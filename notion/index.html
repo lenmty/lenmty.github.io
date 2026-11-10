@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendar 2026</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --page: #f6f5f3;
+    --panel: #ffffff;
+    --text: #292725;
+    --muted: #89847f;
+    --line: #e7e3df;
+    --day-hover: #eeeae6;
+    --plushie: #d77fa5;
+    --kitty: #e7a16f;
+    --plushie-text: #3b1830;
+    --kitty-text: #402313;
+    --today: #5c82c7;
+    --shadow: 0 2px 12px rgba(0,0,0,.045);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #171717;
+      --panel: #202020;
+      --text: #efeeec;
+      --muted: #aaa6a2;
+      --line: #383838;
+      --day-hover: #303030;
+      --plushie: #a85c7e;
+      --kitty: #b8794f;
+      --plushie-text: #fff4fa;
+      --kitty-text: #fff5ed;
+      --today: #8baeea;
+      --shadow: 0 2px 14px rgba(0,0,0,.16);
+    }
+  }
+  /* Optional overrides for hosts that expose their theme on the document. */
+  html[data-theme="light"], body[data-theme="light"], .theme-light {
+    color-scheme: light;
+    --page:#f6f5f3; --panel:#fff; --text:#292725; --muted:#89847f;
+    --line:#e7e3df; --day-hover:#eeeae6; --plushie:#d77fa5; --kitty:#e7a16f;
+    --plushie-text:#3b1830; --kitty-text:#402313; --today:#5c82c7;
+  }
+  html[data-theme="dark"], body[data-theme="dark"], .theme-dark {
+    color-scheme: dark;
+    --page:#171717; --panel:#202020; --text:#efeeec; --muted:#aaa6a2;
+    --line:#383838; --day-hover:#303030; --plushie:#a85c7e; --kitty:#b8794f;
+    --plushie-text:#fff4fa; --kitty-text:#fff5ed; --today:#8baeea;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 22px;
+    background: var(--page); color: var(--text);
+    font: 14px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    transition: background .2s, color .2s;
+  }
+  .wrap { max-width: 1500px; margin: 0 auto; }
+  header { display:flex; align-items:baseline; gap:14px; margin: 0 0 20px; }
+  h1 { font-size: 24px; letter-spacing:-.04em; margin:0; font-weight:650; }
+  .subtitle { color:var(--muted); font-size:13px; }
+  .months { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+  .month {
+    min-width:0; padding:14px 13px 12px; background:var(--panel);
+    border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow);
+  }
+  .month h2 { margin:0 0 12px; font-size:16px; font-weight:650; }
+  .weekdays, .week {
+    display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); column-gap:3px;
+  }
+  .weekdays { margin-bottom:5px; color:var(--muted); text-align:center; font-size:10px; }
+  .weekdays span { padding:3px 0; }
+  .weeks { display:flex; flex-direction:column; gap:4px; }
+  .week {
+    position:relative; grid-template-rows:26px; row-gap:0; min-height:26px;
+    isolation:isolate;
+  }
+  .day {
+    grid-row:1; grid-column:auto; min-width:0; text-align:center; padding-top:5px;
+    border-radius:5px; color:var(--text); font-size:11px; line-height:16px;
+    z-index:3; pointer-events:none; position:relative;
+  }
+  .day.empty { color:transparent; }
+  .day.today { color:var(--today); font-weight:700; }
+  .event {
+    z-index:2; min-width:0; height:var(--bar-height, 100%); align-self:start;
+    border-radius:4px; padding:0; overflow:visible;
+    cursor:pointer; position:relative;
+    top:var(--bar-top, 0%);
+    transition:filter .13s ease, box-shadow .13s ease, transform .13s ease;
+    background:var(--event-color);
+    opacity:.68;
+  }
+  .event.plushie { --event-color:var(--plushie); }
+  .event.kitty { --event-color:var(--kitty); }
+  .event:hover {
+    opacity:.94; filter:brightness(1.08); z-index:5;
+    box-shadow:0 0 0 1px var(--event-color), 0 2px 7px rgba(0,0,0,.18);
+    transform:scaleY(1.08);
+  }
+  .event:active {
+    opacity:1; filter:brightness(1.16);
+    box-shadow:0 0 0 2px var(--event-color), inset 0 0 0 1px rgba(255,255,255,.35);
+    transform:scaleY(.94);
+  }
+  .event::after {
+    content:attr(data-tooltip); position:absolute; left:50%; bottom:calc(100% + 7px);
+    transform:translateX(-50%) translateY(3px); z-index:20;
+    padding:6px 9px; border-radius:6px; background:var(--text); color:var(--panel);
+    font-size:11px; line-height:1.2; font-weight:600; white-space:nowrap;
+    box-shadow:0 3px 12px rgba(0,0,0,.2); opacity:0; visibility:hidden;
+    pointer-events:none; transition:opacity .12s ease, transform .12s ease;
+  }
+  .event:hover::after {
+    opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
+  }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; margin:0 0 15px 2px; color:var(--muted); font-size:12px; }
+  .legend span { display:inline-flex; align-items:center; gap:6px; }
+  .swatch { width:11px; height:11px; border-radius:3px; display:inline-block; }
+  .note { color:var(--muted); font-size:11px; margin:9px 2px 0; }
+  @media (max-width: 1050px) { .months { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media (max-width: 620px) {
+    body { padding:12px; }
+    .months { grid-template-columns:1fr; gap:11px; }
+    .month { padding:13px 12px; }
+    h1 { font-size:21px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>2026</h1><span class="subtitle">Event calendar</span></header>
+  <div class="legend">
+    <span><i class="swatch" style="background:var(--plushie);opacity:.72"></i> Plushie</span>
+    <span><i class="swatch" style="background:var(--kitty);opacity:.72"></i> Kitty Counter</span>
+  </div>
+  <main class="months" id="months"></main>
+  <p class="note">Наведите курсор на цветную плашку, чтобы увидеть название события.</p>
+</div>
+<script>
+const events = [
+  ["Red Bean Shark","plushie","2026-10-26","2026-11-08"],
+  ["Sweet Pancake","plushie","2026-09-28","2026-10-11"],
+  ["Pawjama Kitty","kitty","2026-09-28","2026-10-18"],
+  ["Stylish Corn","plushie","2026-08-31","2026-09-13"],
+  ["Wobble Berry","plushie","2026-08-03","2026-08-16"],
+  ["Workout Meow","kitty","2026-07-27","2026-08-16"],
+  ["Crunchy Raccoon","plushie","2026-07-06","2026-07-19"],
+  ["Broccoo Bird","plushie","2026-06-08","2026-06-21"],
+  ["Catventure","kitty","2026-05-25","2026-06-14"],
+  ["Toast Express","plushie","2026-05-11","2026-05-24"],
+  ["Cotton Sheep","plushie","2026-04-13","2026-04-26"],
+  ["Meowssical","kitty","2026-03-23","2026-04-12"],
+  ["Puff Squad","plushie","2026-03-16","2026-03-29"],
+  ["Kiwi Curio","plushie","2026-02-16","2026-03-01"],
+  ["Bashful Roll","plushie","2026-01-19","2026-02-01"],
+  ["Garden","kitty","2026-01-19","2026-02-08"],
+  ["Chirp Shroomlet","plushie","2025-12-22","2026-01-04"]
+];
+const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const weekdays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const parse = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d,12); };
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const root = document.getElementById("months");
+
+for (let month=0; month<12; month++) {
+  const year=2026, first=new Date(year,month,1,12), last=new Date(year,month+1,0,12);
+  const offset=(first.getDay()+6)%7;
+  const daysInMonth=last.getDate(), weekCount=Math.ceil((offset+daysInMonth)/7);
+  const card=document.createElement("section"); card.className="month";
+  const title=document.createElement("h2"); title.textContent=monthNames[month]; card.append(title);
+  const heads=document.createElement("div"); heads.className="weekdays";
+  weekdays.forEach(w=>{const s=document.createElement("span");s.textContent=w;heads.append(s);});
+  card.append(heads);
+  const weeks=document.createElement("div"); weeks.className="weeks";
+
+  for(let w=0;w<weekCount;w++){
+    const week=document.createElement("div"); week.className="week";
+    const weekStartIndex=w*7-offset;
+    for(let c=0;c<7;c++){
+      const dayNum=weekStartIndex+c+1;
+      const cell=document.createElement("div"); cell.className="day";
+      cell.style.gridColumn=`${c+1} / ${c+2}`;
+      if(dayNum<1 || dayNum>daysInMonth){cell.classList.add("empty");cell.textContent="·";}
+      else {cell.textContent=dayNum;}
+      week.append(cell);
+    }
+
+    // Split each event into the portion that falls within this calendar week.
+    const startDate=new Date(year,month,1+weekStartIndex,12);
+    const endDate=new Date(year,month,1+weekStartIndex+6,12);
+    const segments=events.map(e=>({e,s:parse(e[2]),t:parse(e[3])}))
+      .filter(x=>x.t>=startDate && x.s<=endDate && x.t>=first && x.s<=last)
+      .map(x=>{
+        const a=new Date(Math.max(x.s.getTime(),startDate.getTime(),first.getTime()));
+        const b=new Date(Math.min(x.t.getTime(),endDate.getTime(),last.getTime()));
+        return { ...x, colStart:((a.getDay()+6)%7)+1, colEnd:((b.getDay()+6)%7)+2 };
+      })
+      .sort((a,b)=>a.colStart-b.colStart || a.colEnd-b.colEnd);
+
+    // Assign non-overlapping vertical lanes for overlapping ranges.
+    const laneEnds=[];
+    segments.forEach(seg=>{
+      let lane=laneEnds.findIndex(end=>end<=seg.colStart);
+      if(lane===-1){lane=laneEnds.length;laneEnds.push(0);}
+      laneEnds[lane]=seg.colEnd;
+      seg.lane=lane;
+    });
+    segments.forEach(seg=>{
+      const overlaps = segments.filter(other =>
+        other !== seg && other.colStart < seg.colEnd && other.colEnd > seg.colStart
+      );
+      const isOverlapping = overlaps.length > 0;
+      const bar=document.createElement("div");
+      bar.className=`event ${seg.e[1]}`;
+      bar.style.gridColumn=`${seg.colStart} / ${seg.colEnd}`;
+      bar.style.gridRow="1";
+      // Only segments that actually overlap are shortened. Their vertical
+      // positions are based on the calendar row height, not percentage margins.
+      const stripHeight = isOverlapping ? 66 : 100;
+      const maxLane = isOverlapping ? Math.max(seg.lane, ...overlaps.map(x => x.lane)) : 0;
+      const offset = isOverlapping && maxLane > 0
+        ? seg.lane * (34 / maxLane)
+        : 0;
+      bar.style.setProperty("--bar-height",`${stripHeight}%`);
+      bar.style.setProperty("--bar-top",`${offset}%`);
+      bar.dataset.tooltip=seg.e[0];
+      bar.setAttribute("aria-label",seg.e[0]);
+      bar.setAttribute("role","button");
+      bar.setAttribute("tabindex","0");
+      // This is a visual prototype only: no navigation or database action is attached.
+      week.append(bar);
+    });
+    weeks.append(week);
+  }
+  card.append(weeks); root.append(card);
+}
+</script>
+</body>
+</html>
