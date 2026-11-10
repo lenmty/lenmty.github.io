@@ -50,17 +50,18 @@
     --plushie-text:#fff4fa; --kitty-text:#fff5ed; --today:#8baeea;
   }
   * { box-sizing: border-box; }
+  html, body { width:100%; max-width:100%; overflow-x:hidden; }
   body {
     margin: 0; padding: 22px;
     background: var(--page); color: var(--text);
     font: 14px/1.35 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     transition: background .2s, color .2s;
   }
-  .wrap { max-width: 1500px; margin: 0 auto; }
+  .wrap { width:100%; max-width:1500px; min-width:0; margin:0 auto; overflow:hidden; }
   header { display:flex; align-items:baseline; gap:14px; margin: 0 0 20px; }
   h1 { font-size: 24px; letter-spacing:-.04em; margin:0; font-weight:650; }
   .subtitle { color:var(--muted); font-size:13px; }
-  .months { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+  .months { display:grid; width:100%; min-width:0; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
   .month {
     min-width:0; padding:14px 13px 12px; background:var(--panel);
     border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow);
@@ -73,22 +74,22 @@
   .weekdays span { padding:3px 0; }
   .weeks { display:flex; flex-direction:column; gap:4px; }
   .week {
-    position:relative; grid-template-rows:26px; row-gap:0; min-height:26px;
-    isolation:isolate;
+    --week-height:26px; position:relative; grid-template-rows:26px; row-gap:0; height:26px; min-height:26px;
+    isolation:isolate; overflow:visible;
   }
   .day {
     grid-row:1; grid-column:auto; min-width:0; text-align:center; padding-top:5px;
     border-radius:5px; color:var(--text); font-size:11px; line-height:16px;
-    z-index:3; pointer-events:none; position:relative;
+    z-index:10; pointer-events:none; position:relative;
   }
   .day.empty { color:transparent; }
   .day.today { color:var(--today); font-weight:700; }
   .event {
     z-index:2; min-width:0; height:var(--bar-height, 100%); align-self:start;
     border-radius:4px; padding:0; overflow:visible;
-    cursor:pointer; position:relative;
-    top:var(--bar-top, 0%);
-    transition:filter .13s ease, box-shadow .13s ease, transform .13s ease;
+    cursor:pointer; position:relative; align-self:start;
+    top:var(--bar-top, 0px);
+    transition:filter .13s ease, box-shadow .13s ease;
     background:var(--event-color);
     opacity:.68;
   }
@@ -97,12 +98,10 @@
   .event:hover {
     opacity:.94; filter:brightness(1.08); z-index:5;
     box-shadow:0 0 0 1px var(--event-color), 0 2px 7px rgba(0,0,0,.18);
-    transform:scaleY(1.08);
   }
   .event:active {
     opacity:1; filter:brightness(1.16);
     box-shadow:0 0 0 2px var(--event-color), inset 0 0 0 1px rgba(255,255,255,.35);
-    transform:scaleY(.94);
   }
   .event::after {
     content:attr(data-tooltip); position:absolute; left:50%; bottom:calc(100% + 7px);
@@ -119,12 +118,25 @@
   .legend span { display:inline-flex; align-items:center; gap:6px; }
   .swatch { width:11px; height:11px; border-radius:3px; display:inline-block; }
   .note { color:var(--muted); font-size:11px; margin:9px 2px 0; }
-  @media (max-width: 1050px) { .months { grid-template-columns:repeat(2,minmax(0,1fr)); } }
-  @media (max-width: 620px) {
-    body { padding:12px; }
-    .months { grid-template-columns:1fr; gap:11px; }
-    .month { padding:13px 12px; }
-    h1 { font-size:21px; }
+  @media (max-width: 700px) {
+    body { padding:7px; }
+    header { gap:7px; margin-bottom:10px; }
+    h1 { font-size:18px; }
+    .subtitle { font-size:10px; }
+    .months { grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; }
+    .month { padding:6px 4px 7px; border-radius:7px; }
+    .month h2 { font-size:10px; margin-bottom:6px; }
+    .weekdays, .week { column-gap:1px; }
+    .weekdays { font-size:7px; margin-bottom:3px; }
+    .weekdays span { padding:2px 0; }
+    .weeks { gap:2px; }
+    .week { --week-height:18px; grid-template-rows:18px; height:18px; min-height:18px; }
+    .day { font-size:8px; line-height:13px; padding-top:2px; border-radius:3px; }
+    .event { border-radius:2px; }
+    .event::after { font-size:9px; padding:4px 6px; }
+    .legend { gap:8px; margin-bottom:9px; font-size:10px; }
+    .swatch { width:8px; height:8px; }
+    .note { font-size:9px; }
   }
 </style>
 </head>
@@ -221,10 +233,12 @@ for (let month=0; month<12; month++) {
       const stripHeight = isOverlapping ? 66 : 100;
       const maxLane = isOverlapping ? Math.max(seg.lane, ...overlaps.map(x => x.lane)) : 0;
       const offset = isOverlapping && maxLane > 0
-        ? seg.lane * (34 / maxLane)
+        ? (seg.lane / maxLane) * 34
         : 0;
       bar.style.setProperty("--bar-height",`${stripHeight}%`);
-      bar.style.setProperty("--bar-top",`${offset}%`);
+      // top is now an actual pixel value relative to the fixed-height week row.
+      // This avoids percentage-positioning quirks inside the Notion embed.
+      bar.style.setProperty("--bar-top",`calc(var(--week-height, 26px) * ${offset / 100})`);
       bar.dataset.tooltip=seg.e[0];
       bar.setAttribute("aria-label",seg.e[0]);
       bar.setAttribute("role","button");
